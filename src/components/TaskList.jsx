@@ -225,9 +225,11 @@ const TaskList = () => {
       )}
       <div className="task-list">
         {lists.map((list) => (
-          <div key={list.id}>
+          <div
+            className="task"
+            key={list.id}
+          >
             <div
-              className="task"
               onClick={() => toggleListVisibility(list.id)}
               style={{ cursor: "pointer" }}
             >
@@ -274,7 +276,7 @@ const TaskList = () => {
                       className="btn"
                       onClick={() => openDeleteModal(list.id)}
                     >
-                      Remove List
+                      Remove list
                     </button>
                   </div>
                 )}
@@ -323,47 +325,51 @@ const TaskList = () => {
                           >
                             Remove
                           </button>
-                          <button
-                            className="btn"
-                            onClick={() => changeTodoStatus(list.id, todo.id, "todo")}
-                          >
-                            Todo
-                          </button>
-                          <button
-                            className="btn"
-                            onClick={() => changeTodoStatus(list.id, todo.id, "doing")}
-                          >
-                            Doing
-                          </button>
-                          <button
-                            className="btn"
-                            onClick={() => changeTodoStatus(list.id, todo.id, "done")}
-                          >
-                            Done
-                          </button>
+                          <div className="status-buttons">
+                            <button
+                              className="btn"
+                              onClick={() => changeTodoStatus(list.id, todo.id, "todo")}
+                            >
+                              Todo
+                            </button>
+                            <button
+                              className="btn"
+                              onClick={() => changeTodoStatus(list.id, todo.id, "doing")}
+                            >
+                              Doing
+                            </button>
+                            <button
+                              className="btn"
+                              onClick={() => changeTodoStatus(list.id, todo.id, "done")}
+                            >
+                              Done
+                            </button>
+                          </div>
                         </div>
                       )}
                     </li>
                   ))}
                 </ul>
-                <input
-                  type="text"
-                  value={newTodoText}
-                  onChange={(e) => setNewTodoText(e.target.value)}
-                  placeholder="New todo"
-                />
-                <input
-                  type="text"
-                  value={newTodoDescription}
-                  onChange={(e) => setNewTodoDescription(e.target.value)}
-                  placeholder="New todo description"
-                />
-                <button
-                  className="btn"
-                  onClick={() => addTodo(list.id)}
-                >
-                  Save Todo
-                </button>
+                <div>
+                  <input
+                    type="text"
+                    value={newTodoText}
+                    onChange={(e) => setNewTodoText(e.target.value)}
+                    placeholder="New todo"
+                  />
+                  <input
+                    type="text"
+                    value={newTodoDescription}
+                    onChange={(e) => setNewTodoDescription(e.target.value)}
+                    placeholder="New todo description"
+                  />
+                  <button
+                    className="btn"
+                    onClick={() => addTodo(list.id)}
+                  >
+                    Add new task
+                  </button>
+                </div>
               </div>
             )}
           </div>
