@@ -1,4 +1,5 @@
-import "react";
+import { useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import "../index.css";
 
 const modalOverlayStyle = {
@@ -16,7 +17,6 @@ const modalOverlayStyle = {
 
 const modalStyle = {
   backgroundColor: "white",
-  color: "black",
   padding: "20px",
   borderRadius: "8px",
   boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
@@ -25,12 +25,21 @@ const modalStyle = {
   textAlign: "center",
 };
 
-const deleteButton = {
-  backgroundColor: "#c83434",
+const deleteButtonStyle = {
+  backgroundColor: "red",
   color: "white",
+  marginRight: "10px",
 };
 
 const Modal = ({ isOpen, onClose, onConfirm }) => {
+  const deleteButtonRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen && deleteButtonRef.current) {
+      deleteButtonRef.current.focus();
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
@@ -39,8 +48,9 @@ const Modal = ({ isOpen, onClose, onConfirm }) => {
         <h2>Are you sure you want to delete the list?</h2>
         <p>This action is irreversible.</p>
         <button
-          style={deleteButton}
+          style={deleteButtonStyle}
           onClick={onConfirm}
+          ref={deleteButtonRef}
         >
           Yes, delete
         </button>
@@ -48,6 +58,12 @@ const Modal = ({ isOpen, onClose, onConfirm }) => {
       </div>
     </div>
   );
+};
+
+Modal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func.isRequired,
 };
 
 export default Modal;
