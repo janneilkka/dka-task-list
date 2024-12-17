@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Modal from "./Modal";
 
 const TaskList = () => {
   // Retrieve lists from localStorage or initialize with an empty array
@@ -13,6 +14,13 @@ const TaskList = () => {
   // State to manage the editing list and its new name
   const [editingListId, setEditingListId] = useState(null);
   const [editingListName, setEditingListName] = useState("");
+
+  // State to manage the modal visibility and the list to be deleted
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [listToDelete, setListToDelete] = useState(null);
+
+  // State to manage which list is currently open
+  const [openListId, setOpenListId] = useState(null);
 
   // Save lists to localStorage whenever they change
   useEffect(() => {
@@ -60,6 +68,31 @@ const TaskList = () => {
     cancelEditing();
   };
 
+  // Function to open the delete confirmation modal
+  const openDeleteModal = (listId) => {
+    setListToDelete(listId);
+    setIsModalOpen(true);
+  };
+
+  // Function to close the delete confirmation modal
+  const closeDeleteModal = () => {
+    setListToDelete(null);
+    setIsModalOpen(false);
+  };
+
+  // Function to confirm the deletion of a list
+  const confirmDelete = () => {
+    if (listToDelete !== null) {
+      removeList(listToDelete);
+      closeDeleteModal();
+    }
+  };
+
+  // Function to toggle the visibility of a list
+  const toggleListVisibility = (listId) => {
+    setOpenListId(openListId === listId ? null : listId);
+  };
+
   return (
     <div>
       <h1>Todo Lists</h1>
@@ -72,43 +105,57 @@ const TaskList = () => {
       <button onClick={addList}>Add List</button>
       {lists.map((list) => (
         <div key={list.id}>
-          {editingListId === list.id ? (
+          <div
+            onClick={() => toggleListVisibility(list.id)}
+            style={{ cursor: "pointer" }}
+          >
+            <h2>{list.name}</h2>
+          </div>
+          {openListId === list.id && (
             <div>
+              {editingListId === list.id ? (
+                <div>
+                  <input
+                    type="text"
+                    value={editingListName}
+                    onChange={(e) => setEditingListName(e.target.value)}
+                  />
+                  <button onClick={() => saveEditing(list.id)}>Save</button>
+                  <button onClick={cancelEditing}>Cancel</button>
+                </div>
+              ) : (
+                <div>
+                  <button onClick={() => startEditing(list.id, list.name)}>Edit</button>
+                  <button onClick={() => openDeleteModal(list.id)}>Remove List</button>
+                </div>
+              )}
+              <ul>
+                {list.todos.map((todo) => (
+                  <li key={todo.id}>
+                    {todo.text}
+                    <button onClick={() => removeTodo(list.id, todo.id)}>Remove</button>
+                  </li>
+                ))}
+              </ul>
               <input
                 type="text"
-                value={editingListName}
-                onChange={(e) => setEditingListName(e.target.value)}
+                placeholder="New todo"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && e.target.value.trim() !== "") {
+                    addTodo(list.id, e.target.value);
+                    e.target.value = ""; // Clear the input field after adding a todo
+                  }
+                }}
               />
-              <button onClick={() => saveEditing(list.id)}>Save</button>
-              <button onClick={cancelEditing}>Cancel</button>
-            </div>
-          ) : (
-            <div>
-              <h2>{list.name}</h2>
-              <button onClick={() => startEditing(list.id, list.name)}>Edit</button>
-              <button onClick={() => removeList(list.id)}>Remove List</button>
             </div>
           )}
-          <ul>
-            {list.todos.map((todo) => (
-              <li key={todo.id}>
-                {todo.text}
-                <button onClick={() => removeTodo(list.id, todo.id)}>Remove</button>
-              </li>
-            ))}
-          </ul>
-          <input
-            type="text"
-            placeholder="New todo"
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && e.target.value.trim() !== "") {
-                addTodo(list.id, e.target.value);
-                e.target.value = ""; // Clear the input field after adding a todo
-              }
-            }}
-          />
         </div>
       ))}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 };
