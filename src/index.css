@@ -9,26 +9,16 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-#root {
   max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  margin: auto;
   text-align: center;
+  padding: 10px;
 }
 
 .btn {
   padding: 0.5rem 1rem;
-}
-.todo-item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.todo-item p {
-  margin: 0.5rem 0;
+  border: none;
+  border-radius: 5px;
 }
 
 ul {
@@ -42,48 +32,93 @@ li {
 
 .task-list {
   display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-content: flex-end;
-  align-items: center;
-  justify-content: space-between;
-}
-.task {
-  border: 1px solid #fff;
-  padding: 10px;
-  width: 100%;
-  max-width: 600px;
-  margin: 5px;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1rem;
 }
 
-@media (min-width: 1028px) {
+.header {
+  margin: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+@media (min-width: 769px) {
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  h3 {
+    font-size: 1rem;
+  }
+  p {
+    font-size: 1rem;
+  }
+  span {
+    font-size: 1rem;
+  }
+
+  .list-details {
+    margin: 5%;
+  }
+  .list-item {
+    box-shadow: 0 0 0 1px white;
+    width: 200px;
+    padding: 40px;
+    max-width: 600px;
+    margin: 5px;
+    border-radius: 5px;
+    flex: auto;
+  }
+  .list-item.open {
+    max-width: 1000px;
+    box-shadow: none;
+    margin: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .list-item.closed {
+  }
 }
 
 @media (max-width: 768px) {
   h1 {
     font-size: 1.5rem;
   }
+  h2 {
+    font-size: 1rem;
+  }
+  h3 {
+    font-size: 0.875rem;
+  }
+  p {
+    font-size: 0.875rem;
+  }
+  span {
+    font-size: 0.875rem;
+  }
 
   input {
     width: 100%;
-    margin-bottom: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  #root {
-    padding: 0.5rem;
   }
 
-  h1 {
-    font-size: 1rem;
+  .task {
+    box-shadow: 0 0 0 1px white;
+    padding: 10px;
+    width: 100%;
+    margin: 5px;
   }
-
-  input,
-  button {
-    font-size: 1rem;
-  }
-  .btn {
-    max-width: 300px;
+  .todo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

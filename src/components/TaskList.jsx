@@ -47,7 +47,7 @@ const TaskList = () => {
 
   // Function to validate the list name
   const validateListName = (name, setError) => {
-    const regex = /^[\p{L}\p{N}]{1,60}$/u;
+    const regex = /^[\p{L}\p{N} ]{1,60}$/u;
     if (!regex.test(name)) {
       setError("List name can only contain letters and numbers, and must be 60 characters or less.");
       return false;
@@ -192,50 +192,39 @@ const TaskList = () => {
 
   return (
     <div>
-      <h1>Todo Lists</h1>
-      {isAddingNewList ? (
-        <div>
-          <input
-            type="text"
-            value={newListName}
-            onChange={(e) => setNewListName(e.target.value)}
-            placeholder="New list name"
-          />
-          {newListNameError && <p style={{ color: "red" }}>{newListNameError}</p>}
-          <input
-            type="text"
-            value={newListDescription}
-            onChange={(e) => setNewListDescription(e.target.value)}
-            placeholder="New list description"
-          />
-          <button
-            className="btn"
-            onClick={addList}
-          >
-            Add List
-          </button>
-        </div>
-      ) : (
-        <button
-          className="btn"
-          onClick={() => setIsAddingNewList(true)}
-        >
-          Make a new list
-        </button>
-      )}
+      <div className="header">
+        <h1>Todo Lists</h1>
+        {isAddingNewList ? (
+          <div>
+            <input
+              type="text"
+              value={newListName}
+              onChange={(e) => setNewListName(e.target.value)}
+              placeholder="New list name"
+            />
+            {newListNameError && <p style={{ color: "red" }}>{newListNameError}</p>}
+            <input
+              type="text"
+              value={newListDescription}
+              onChange={(e) => setNewListDescription(e.target.value)}
+              placeholder="New list description"
+            />
+            <button onClick={addList}>Add List</button>
+          </div>
+        ) : (
+          <button onClick={() => setIsAddingNewList(true)}>Make a new list</button>
+        )}
+      </div>
       <div className="task-list">
         {lists.map((list) => (
           <div
-            className="task"
             key={list.id}
+            className={`list-item ${openListId === list.id ? "open" : "closed"}`}
+            style={{ display: openListId && openListId !== list.id ? "none" : "" }}
           >
-            <div
-              onClick={() => toggleListVisibility(list.id)}
-              style={{ cursor: "pointer" }}
-            >
-              <h2>{list.name}</h2>
-              <p>{list.description}</p>
-            </div>
+            <h2>{list.name}</h2>
+            <p>{list.description}</p>
+            {openListId === list.id ? <button onClick={() => toggleListVisibility(list.id)}>Close list</button> : <button onClick={() => toggleListVisibility(list.id)}>Open list</button>}
             {openListId === list.id && (
               <div>
                 {editingListId === list.id ? (
@@ -251,40 +240,20 @@ const TaskList = () => {
                       value={editingListDescription}
                       onChange={(e) => setEditingListDescription(e.target.value)}
                     />
-                    <button
-                      className="btn"
-                      onClick={() => saveEditing(list.id)}
-                    >
-                      Save
-                    </button>
-                    <button
-                      className="btn"
-                      onClick={cancelEditing}
-                    >
-                      Cancel
-                    </button>
+                    <button onClick={() => saveEditing(list.id)}>Save</button>
+                    <button onClick={cancelEditing}>Cancel</button>
                   </div>
                 ) : (
                   <div>
-                    <button
-                      className="btn"
-                      onClick={() => startEditing(list.id, list.name, list.description)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn"
-                      onClick={() => openDeleteModal(list.id)}
-                    >
-                      Remove list
-                    </button>
+                    <button onClick={() => startEditing(list.id, list.name, list.description)}>Edit name</button>
+                    <button onClick={() => openDeleteModal(list.id)}>Remove list</button>
                   </div>
                 )}
                 <ul>
                   {list.todos.map((todo) => (
                     <li key={todo.id}>
                       {editingTodoId === todo.id ? (
-                        <div className="todo-item">
+                        <div>
                           <input
                             type="text"
                             value={editingTodoText}
@@ -295,81 +264,37 @@ const TaskList = () => {
                             value={editingTodoDescription}
                             onChange={(e) => setEditingTodoDescription(e.target.value)}
                           />
-                          <button
-                            className="btn"
-                            onClick={() => saveEditingTodo(list.id, todo.id)}
-                          >
-                            Save
-                          </button>
-                          <button
-                            className="btn"
-                            onClick={cancelEditingTodo}
-                          >
-                            Cancel
-                          </button>
+                          <button onClick={() => saveEditingTodo(list.id, todo.id)}>Save</button>
+                          <button onClick={cancelEditingTodo}>Cancel</button>
                         </div>
                       ) : (
                         <div>
                           <p>{todo.text}</p>
                           <p>{todo.description}</p>
                           <p>Status: {todo.status}</p>
-                          <button
-                            className="btn"
-                            onClick={() => startEditingTodo(todo.id, todo.text, todo.description)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="btn"
-                            onClick={() => removeTodo(list.id, todo.id)}
-                          >
-                            Remove
-                          </button>
-                          <div className="status-buttons">
-                            <button
-                              className="btn"
-                              onClick={() => changeTodoStatus(list.id, todo.id, "todo")}
-                            >
-                              Todo
-                            </button>
-                            <button
-                              className="btn"
-                              onClick={() => changeTodoStatus(list.id, todo.id, "doing")}
-                            >
-                              Doing
-                            </button>
-                            <button
-                              className="btn"
-                              onClick={() => changeTodoStatus(list.id, todo.id, "done")}
-                            >
-                              Done
-                            </button>
-                          </div>
+                          <button onClick={() => startEditingTodo(todo.id, todo.text, todo.description)}>Edit</button>
+                          <button onClick={() => removeTodo(list.id, todo.id)}>Remove</button>
+                          <button onClick={() => changeTodoStatus(list.id, todo.id, "todo")}>Todo</button>
+                          <button onClick={() => changeTodoStatus(list.id, todo.id, "doing")}>Doing</button>
+                          <button onClick={() => changeTodoStatus(list.id, todo.id, "done")}>Done</button>
                         </div>
                       )}
                     </li>
                   ))}
                 </ul>
-                <div>
-                  <input
-                    type="text"
-                    value={newTodoText}
-                    onChange={(e) => setNewTodoText(e.target.value)}
-                    placeholder="New todo"
-                  />
-                  <input
-                    type="text"
-                    value={newTodoDescription}
-                    onChange={(e) => setNewTodoDescription(e.target.value)}
-                    placeholder="New todo description"
-                  />
-                  <button
-                    className="btn"
-                    onClick={() => addTodo(list.id)}
-                  >
-                    Add new task
-                  </button>
-                </div>
+                <input
+                  type="text"
+                  value={newTodoText}
+                  onChange={(e) => setNewTodoText(e.target.value)}
+                  placeholder="New todo"
+                />
+                <input
+                  type="text"
+                  value={newTodoDescription}
+                  onChange={(e) => setNewTodoDescription(e.target.value)}
+                  placeholder="New todo description"
+                />
+                <button onClick={() => addTodo(list.id)}>Save Todo</button>
               </div>
             )}
           </div>
