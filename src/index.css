@@ -23,7 +23,8 @@ button {
   border-radius: 5px;
   height: 44px;
   font-size: 16px;
-  background-color: #005c8a;
+  background-color: #003f5f;
+  box-shadow: 0 0 0 1px white;
 }
 button:hover {
   text-decoration: underline;
@@ -43,6 +44,7 @@ button:hover {
 
 input {
   height: 44px;
+  width: 100%;
 }
 
 ul {
@@ -52,23 +54,6 @@ ul {
 li {
   list-style: none;
   margin-bottom: 1rem;
-}
-
-.task-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-content: flex-end;
-  align-items: stretch;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.header {
-  margin: 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 }
 
 @media (min-width: 769px) {
@@ -86,6 +71,29 @@ li {
   }
   span {
     font-size: 1rem;
+  }
+
+  .header {
+    margin: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .input-fields {
+    display: flex;
+    flex-direction: row;
+    align-items: self-end;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .input-labels {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+    margin: 8px;
   }
 
   .list-details {
@@ -130,8 +138,17 @@ li {
     width: 300px;
     margin: 5px;
   }
-  .task-content {
+
+  .task-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-end;
+    align-items: stretch;
+    justify-content: center;
+    gap: 1rem;
   }
+
   .task-controls {
     display: flex;
     flex-direction: column;
@@ -159,11 +176,46 @@ li {
     font-size: 0.875rem;
   }
 
+  .header {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .input-fields {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 1rem;
+    margin: 8px;
+  }
+
+  .input-labels {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .list-item.closed {
+    box-shadow: 0 0 0 1px white;
+    border-radius: 5px;
+  }
   .task {
     box-shadow: 0 0 0 1px white;
+    border-radius: 5px;
     padding: 10px;
-    width: 100%;
     margin: 5px;
+  }
+
+  .task-list {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: stretch;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: nowrap;
   }
   .todo-item {
     display: flex;

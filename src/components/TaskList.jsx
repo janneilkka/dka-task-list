@@ -39,6 +39,9 @@ const TaskList = () => {
   // State to manage the visibility of the new list input fields
   const [isAddingNewList, setIsAddingNewList] = useState(false);
 
+  // State to manage the current filter for todos
+  const [todoFilter, setTodoFilter] = useState("all");
+
   // Save lists to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("lists", JSON.stringify(lists));
@@ -177,6 +180,7 @@ const TaskList = () => {
   const confirmDelete = () => {
     if (listToDelete !== null) {
       removeList(listToDelete);
+      setOpenListId(null); // Ensure no list is open
       closeDeleteModal();
     }
   };
@@ -191,20 +195,28 @@ const TaskList = () => {
       <div className="header">
         <h1>Todo Lists</h1>
         {isAddingNewList ? (
-          <div>
-            <input
-              type="text"
-              value={newListName}
-              onChange={(e) => setNewListName(e.target.value)}
-              placeholder="New list name"
-            />
-            {newListNameError && <p style={{ color: "red" }}>{newListNameError}</p>}
-            <input
-              type="text"
-              value={newListDescription}
-              onChange={(e) => setNewListDescription(e.target.value)}
-              placeholder="New list description"
-            />
+          <div className="input-fields">
+            <div className="input-labels">
+              <label htmlFor="new-list-name">Name of new list:</label>
+              <input
+                type="text"
+                value={newListName}
+                onChange={(e) => setNewListName(e.target.value)}
+                placeholder="E.g. Cooking"
+                id="new-list-name"
+              />
+              {newListNameError && <p style={{ color: "red" }}>{newListNameError}</p>}
+            </div>
+            <div className="input-labels">
+              <label htmlFor="new-list-description">Description of new list:</label>
+              <input
+                type="text"
+                value={newListDescription}
+                onChange={(e) => setNewListDescription(e.target.value)}
+                placeholder="E.g. Recipes to try out"
+                id="new-list-description"
+              />
+            </div>
             <button onClick={addList}>Add List</button>
           </div>
         ) : (
@@ -226,18 +238,26 @@ const TaskList = () => {
             {openListId === list.id && (
               <div>
                 {editingListId === list.id ? (
-                  <div>
-                    <input
-                      type="text"
-                      value={editingListName}
-                      onChange={(e) => setEditingListName(e.target.value)}
-                    />
-                    {editingListNameError && <p style={{ color: "red" }}>{editingListNameError}</p>}
-                    <input
-                      type="text"
-                      value={editingListDescription}
-                      onChange={(e) => setEditingListDescription(e.target.value)}
-                    />
+                  <div className="input-fields">
+                    <div className="input-labels">
+                      <label htmlFor="edit-list-name">Edit list name:</label>
+                      <input
+                        type="text"
+                        value={editingListName}
+                        onChange={(e) => setEditingListName(e.target.value)}
+                        id="edit-list-name"
+                      />
+                      {editingListNameError && <p style={{ color: "red" }}>{editingListNameError}</p>}
+                    </div>
+                    <div className="input-labels">
+                      <label htmlFor="edit-list-description">Edit list description:</label>
+                      <input
+                        type="text"
+                        value={editingListDescription}
+                        onChange={(e) => setEditingListDescription(e.target.value)}
+                        id="edit-list-description"
+                      />
+                    </div>
                     <button onClick={() => saveEditing(list.id)}>Save</button>
                     <button onClick={cancelEditing}>Cancel</button>
                   </div>
@@ -247,14 +267,19 @@ const TaskList = () => {
                     <button onClick={() => openDeleteModal(list.id)}>Remove list</button>
                   </div>
                 )}
-                <h3>Add new tasks to this list</h3>
-                <input
-                  type="text"
-                  value={newTodoText}
-                  onChange={(e) => setNewTodoText(e.target.value)}
-                  placeholder="New todo"
-                />
-                <button onClick={() => addTodo(list.id)}>Add task</button>
+                <div className="input-fields">
+                  <div className="input-labels">
+                    <label htmlFor="add-task">Add new task to this list:</label>
+                    <input
+                      type="text"
+                      value={newTodoText}
+                      onChange={(e) => setNewTodoText(e.target.value)}
+                      placeholder="New todo"
+                      id="add-task"
+                    />
+                  </div>
+                  <button onClick={() => addTodo(list.id)}>Add task</button>
+                </div>
                 <h3>Tasks in this list:</h3>
                 <ul className="task-list-content">
                   {list.todos.map((todo) => (
@@ -264,11 +289,17 @@ const TaskList = () => {
                     >
                       {editingTodoId === todo.id ? (
                         <div>
-                          <input
-                            type="text"
-                            value={editingTodoText}
-                            onChange={(e) => setEditingTodoText(e.target.value)}
-                          />
+                          <div className="input-fields">
+                            <div className="input-labels">
+                              <label htmlFor="edit-task">Edit task name:</label>
+                              <input
+                                type="text"
+                                value={editingTodoText}
+                                onChange={(e) => setEditingTodoText(e.target.value)}
+                                id="edit-task"
+                              />
+                            </div>
+                          </div>
                           <button onClick={() => saveEditingTodo(list.id, todo.id)}>Save</button>
                           <button onClick={cancelEditingTodo}>Cancel</button>
                         </div>

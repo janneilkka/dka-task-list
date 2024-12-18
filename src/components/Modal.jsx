@@ -16,10 +16,11 @@ const modalOverlayStyle = {
 };
 
 const modalStyle = {
-  backgroundColor: "white",
+  backgroundColor: "#242424",
   padding: "20px",
   borderRadius: "8px",
-  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+  border: "1px solid white",
+  boxShadow: "0 2px 10px #000000",
   maxWidth: "500px",
   width: "100%",
   textAlign: "center",
