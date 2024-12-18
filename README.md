@@ -1,8 +1,6 @@
-# React + Vite
+# Task List App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A rudimentary to-do app where you can create lists of tasks. This little coding test is built with Vite. Check out the _package.json_ for more information. Basically you should be good to go with the following:
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. `npm install`
+2. `npm run dev`
