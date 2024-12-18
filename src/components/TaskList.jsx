@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Trash2 } from "react-feather";
+import { ArrowLeft, Trash2, Plus } from "react-feather";
 import Modal from "./Modal";
 
 const TaskList = () => {
@@ -198,7 +198,7 @@ const TaskList = () => {
 
   return (
     <div>
-      <div className="header">
+      <header className="header">
         <h1>Todo Lists</h1>
         {isAddingNewList ? (
           <div className="input-fields">
@@ -211,7 +211,14 @@ const TaskList = () => {
                 placeholder="E.g. Cooking"
                 id="new-list-name"
               />
-              {newListNameError && <p style={{ color: "red" }}>{newListNameError}</p>}
+              {newListNameError && (
+                <label
+                  htmlFor="edit-list-name"
+                  style={{ color: "#ff5b5b" }}
+                >
+                  {newListNameError}
+                </label>
+              )}
             </div>
             <div className="input-labels">
               <label htmlFor="new-list-description">Description of new list:</label>
@@ -226,144 +233,193 @@ const TaskList = () => {
             <button onClick={addList}>Add List</button>
           </div>
         ) : (
-          <button onClick={() => setIsAddingNewList(true)}>Make a new list</button>
+          <button onClick={() => setIsAddingNewList(true)}>
+            Make a new list
+            <Plus
+              color="#ffffff"
+              size="16"
+              style={{ marginLeft: "4px" }}
+            />
+          </button>
         )}
-      </div>
-      <div className="task-list">
-        {lists.map((list) => (
-          <div
-            key={list.id}
-            className={`list-item ${openListId === list.id ? "open" : "closed"}`}
-            style={{ display: openListId && openListId !== list.id ? "none" : "" }}
-          >
-            <div className="list-name-section">
-              <h2>{list.name}</h2>
-              <p>{list.description}</p>
-              {openListId === list.id ? <button onClick={() => toggleListVisibility(list.id)}>Close list</button> : <button onClick={() => toggleListVisibility(list.id)}>Open list</button>}
-            </div>
-            {openListId === list.id && (
-              <div>
-                {editingListId === list.id ? (
-                  <div className="input-fields">
-                    <div className="input-labels">
-                      <label htmlFor="edit-list-name">Edit list name:</label>
-                      <input
-                        type="text"
-                        value={editingListName}
-                        onChange={(e) => setEditingListName(e.target.value)}
-                        id="edit-list-name"
-                      />
-                      {editingListNameError && <p style={{ color: "red" }}>{editingListNameError}</p>}
+      </header>
+      <main>
+        <div className="task-list">
+          {lists.length === 0 ? (
+            <p style={{ fontStyle: "italic" }}>Make your first list by clicking the &quot;Make a new list&quot; -button</p>
+          ) : (
+            lists.map((list) => (
+              <div
+                key={list.id}
+                className={`list-item ${openListId === list.id ? "open" : "closed"}`}
+                style={{ display: openListId && openListId !== list.id ? "none" : "" }}
+              >
+                <div className="list-name-section">
+                  {openListId === list.id && (
+                    <div style={{ display: "flex" }}>
+                      <button
+                        onClick={() => toggleListVisibility(list.id)}
+                        className="button-link"
+                      >
+                        <ArrowLeft
+                          color="#ffffff"
+                          size="16"
+                          style={{ marginRight: "4px" }}
+                        />
+                        Back to all lists
+                      </button>
                     </div>
-                    <div className="input-labels">
-                      <label htmlFor="edit-list-description">Edit list description:</label>
-                      <input
-                        type="text"
-                        value={editingListDescription}
-                        onChange={(e) => setEditingListDescription(e.target.value)}
-                        id="edit-list-description"
-                      />
-                    </div>
-                    <button onClick={() => saveEditing(list.id)}>Save</button>
-                    <button onClick={cancelEditing}>Cancel</button>
-                  </div>
-                ) : (
+                  )}
+                  <h2>{list.name}</h2>
+                  <p>{list.description}</p>
+                  {openListId !== list.id && <button onClick={() => toggleListVisibility(list.id)}>Open list</button>}
+                </div>
+                {openListId === list.id && (
                   <div>
-                    <button onClick={() => startEditing(list.id, list.name, list.description)}>Edit name</button>
-                    <button onClick={() => openDeleteModal(list.id)}>Remove list</button>
+                    {editingListId === list.id ? (
+                      <div className="input-fields">
+                        <div className="input-labels">
+                          <label htmlFor="edit-list-name">Edit list name:</label>
+                          <input
+                            type="text"
+                            value={editingListName}
+                            onChange={(e) => setEditingListName(e.target.value)}
+                            id="edit-list-name"
+                          />
+                          {editingListNameError && (
+                            <label
+                              htmlFor="edit-list-name"
+                              style={{ color: "#ff5b5b" }}
+                            >
+                              {editingListNameError}
+                            </label>
+                          )}
+                        </div>
+                        <div className="input-labels">
+                          <label htmlFor="edit-list-description">Edit list description:</label>
+                          <input
+                            type="text"
+                            value={editingListDescription}
+                            onChange={(e) => setEditingListDescription(e.target.value)}
+                            id="edit-list-description"
+                          />
+                        </div>
+                        <button onClick={() => saveEditing(list.id)}>Save</button>
+                        <button onClick={cancelEditing}>Cancel</button>
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", justifyContent: "center" }}>
+                        <button onClick={() => startEditing(list.id, list.name, list.description)}>Edit name</button>
+                        <button onClick={() => openDeleteModal(list.id)}>Remove list</button>
+                      </div>
+                    )}
+                    <div className="input-fields">
+                      <div className="input-labels">
+                        <label htmlFor="add-task">Add new task to this list:</label>
+                        <input
+                          type="text"
+                          value={newTodoText}
+                          onChange={(e) => setNewTodoText(e.target.value)}
+                          placeholder="New todo"
+                          id="add-task"
+                        />
+                      </div>
+                      <button onClick={() => addTodo(list.id)}>Add task</button>
+                    </div>
+                    <label htmlFor="filter-buttons">
+                      <h3>Filter the tasks in this list:</h3>
+                    </label>
+                    <select
+                      className="filter-buttons"
+                      name="filter-buttons"
+                      id="filter-buttons"
+                      value={todoFilter}
+                      onChange={(e) => setTodoFilter(e.target.value)}
+                    >
+                      <option value="all">All</option>
+                      <option value="todo">Todo</option>
+                      <option value="doing">Doing</option>
+                      <option value="done">Done</option>
+                    </select>
+                    <ul className="task-list-content">
+                      {filterTodos(list.todos).map((todo) => (
+                        <li
+                          key={todo.id}
+                          className="task"
+                        >
+                          {editingTodoId === todo.id ? (
+                            <div style={{ display: "flex", flexDirection: "column" }}>
+                              <div className="input-fields">
+                                <div className="input-labels">
+                                  <label htmlFor="edit-task">Edit task name:</label>
+                                  <input
+                                    type="text"
+                                    value={editingTodoText}
+                                    onChange={(e) => setEditingTodoText(e.target.value)}
+                                    id="edit-task"
+                                  />
+                                </div>
+                              </div>
+                              <button onClick={() => saveEditingTodo(list.id, todo.id)}>Save</button>
+                              <button onClick={cancelEditingTodo}>Cancel</button>
+                            </div>
+                          ) : (
+                            <div>
+                              <div className="task-content">
+                                <p>{todo.text}</p>
+                              </div>
+                              <div className="task-controls">
+                                <div className="input-fields">
+                                  <div className="input-labels">
+                                    <label htmlFor="status-selector">Status of task:</label>
+                                    <select
+                                      value={todo.status}
+                                      onChange={(e) => changeTodoStatus(list.id, todo.id, e.target.value)}
+                                      className="filter-buttons"
+                                      id="status-selector"
+                                    >
+                                      <option
+                                        value=""
+                                        disabled
+                                      >
+                                        Select status
+                                      </option>
+                                      <option value="todo">Todo</option>
+                                      <option value="doing">Doing</option>
+                                      <option value="done">Done</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <button
+                                  className="button-secondary"
+                                  onClick={() => startEditingTodo(todo.id, todo.text)}
+                                >
+                                  Edit task
+                                </button>
+                                <button
+                                  className="button-link"
+                                  onClick={() => removeTodo(list.id, todo.id)}
+                                >
+                                  Delete task
+                                  <Trash2
+                                    color="#ffffff"
+                                    size="16"
+                                    style={{ marginLeft: "4px" }}
+                                  />
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 )}
-                <div className="input-fields">
-                  <div className="input-labels">
-                    <label htmlFor="add-task">Add new task to this list:</label>
-                    <input
-                      type="text"
-                      value={newTodoText}
-                      onChange={(e) => setNewTodoText(e.target.value)}
-                      placeholder="New todo"
-                      id="add-task"
-                    />
-                  </div>
-                  <button onClick={() => addTodo(list.id)}>Add task</button>
-                </div>
-                <label htmlFor="filter-buttons">
-                  <h3>Filter the tasks in this list:</h3>
-                </label>
-                <select
-                  className="filter-buttons"
-                  name="filter-buttons"
-                  id="filter-buttons"
-                  value={todoFilter}
-                  onChange={(e) => setTodoFilter(e.target.value)}
-                >
-                  <option value="all">All</option>
-                  <option value="todo">Todo</option>
-                  <option value="doing">Doing</option>
-                  <option value="done">Done</option>
-                </select>
-                <ul className="task-list-content">
-                  {filterTodos(list.todos).map((todo) => (
-                    <li
-                      key={todo.id}
-                      className="task"
-                    >
-                      {editingTodoId === todo.id ? (
-                        <div>
-                          <div className="input-fields">
-                            <div className="input-labels">
-                              <label htmlFor="edit-task">Edit task name:</label>
-                              <input
-                                type="text"
-                                value={editingTodoText}
-                                onChange={(e) => setEditingTodoText(e.target.value)}
-                                id="edit-task"
-                              />
-                            </div>
-                          </div>
-                          <button onClick={() => saveEditingTodo(list.id, todo.id)}>Save</button>
-                          <button onClick={cancelEditingTodo}>Cancel</button>
-                        </div>
-                      ) : (
-                        <div>
-                          <div className="task-content">
-                            <p>{todo.text}</p>
-                            <span>{todo.description}</span>
-                            <p>Status: {todo.status}</p>
-                          </div>
-                          <div className="task-controls">
-                            <div style={{ display: "flex", columnGap: "4px", justifyContent: "center" }}>
-                              <button onClick={() => changeTodoStatus(list.id, todo.id, "todo")}>Todo</button>
-                              <button onClick={() => changeTodoStatus(list.id, todo.id, "doing")}>Doing</button>
-                              <button onClick={() => changeTodoStatus(list.id, todo.id, "done")}>Done</button>
-                            </div>
-                            <button
-                              className="button-secondary"
-                              onClick={() => startEditingTodo(todo.id, todo.text, todo.description)}
-                            >
-                              Edit task
-                            </button>
-                            <button
-                              className="button-alert"
-                              onClick={() => removeTodo(list.id, todo.id)}
-                            >
-                              Delete task
-                              <Trash2
-                                color="#ffffff"
-                                size="16"
-                                style={{ marginLeft: "4px" }}
-                              />
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </li>
-                  ))}
-                </ul>
               </div>
-            )}
-          </div>
-        ))}
-      </div>
+            ))
+          )}
+        </div>
+      </main>
       <Modal
         isOpen={isModalOpen}
         onClose={closeDeleteModal}

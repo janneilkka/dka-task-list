@@ -1,6 +1,8 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
+  word-spacing: 0.16;
+  letter-spacing: 0.12;
   font-weight: 400;
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -25,16 +27,29 @@ button {
   font-size: 16px;
   background-color: #003f5f;
   box-shadow: 0 0 0 1px white;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 button:hover {
-  text-decoration: underline;
+  background-color: #454545;
 }
 
 .button-secondary {
-  background-color: transparent;
+  background-color: #242424;
   color: white;
   box-shadow: 0 0 0 1px white;
   padding: 10px;
+}
+
+.button-link {
+  background-color: transparent;
+  box-shadow: none;
+  display: "flex";
+  justify-content: "flexStart";
+  flex-direction: "row";
+  align-items: "center";
 }
 
 .button-alert {
@@ -44,7 +59,6 @@ button:hover {
 
 .filter-buttons {
   padding: 0.5rem 1rem;
-  margin: 8px;
   border: none;
   border-radius: 5px;
   height: 44px;
@@ -67,6 +81,24 @@ li {
   margin-bottom: 1rem;
 }
 
+label {
+  font-size: 1rem;
+}
+
+p {
+  margin-bottom: 2rem;
+}
+
+:focus {
+  box-shadow: 0 0 0 5px yellow;
+}
+
+.list-name-section {
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
 @media (min-width: 769px) {
   h1 {
     font-size: 2rem;
@@ -81,7 +113,7 @@ li {
     font-size: 1rem;
   }
   span {
-    font-size: 1rem;
+    font-size: 0.875rem;
   }
 
   .header {
@@ -89,6 +121,7 @@ li {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
   }
 
   .input-fields {
@@ -102,9 +135,9 @@ li {
   .input-labels {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
     align-items: flex-start;
     margin: 8px;
+    gap: 4px;
   }
 
   .list-details {
@@ -129,9 +162,6 @@ li {
   }
 
   .list-item.closed {
-  }
-  .list-name-section {
-    margin: 8px;
   }
   .task-list-content {
     display: flex;
@@ -192,6 +222,7 @@ li {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
   }
 
   .input-fields {

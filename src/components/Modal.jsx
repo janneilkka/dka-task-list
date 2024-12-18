@@ -26,12 +26,6 @@ const modalStyle = {
   textAlign: "center",
 };
 
-const deleteButtonStyle = {
-  backgroundColor: "red",
-  color: "white",
-  marginRight: "10px",
-};
-
 const Modal = ({ isOpen, onClose, onConfirm }) => {
   const deleteButtonRef = useRef(null);
 
@@ -45,17 +39,29 @@ const Modal = ({ isOpen, onClose, onConfirm }) => {
 
   return (
     <div style={modalOverlayStyle}>
-      <div style={modalStyle}>
-        <h2>Are you sure you want to delete the list?</h2>
-        <p>This action is irreversible.</p>
-        <button
-          style={deleteButtonStyle}
-          onClick={onConfirm}
-          ref={deleteButtonRef}
-        >
-          Yes, delete
-        </button>
-        <button onClick={onClose}>Cancel</button>
+      <div
+        style={modalStyle}
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="dialog_label"
+        aria-describedby="dialog_desc"
+      >
+        <div id="dialog_label">
+          <h2>Are you sure you want to delete the list?</h2>
+        </div>
+        <div id="dialog_desc">
+          <p>This action is irreversible.</p>
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <button
+            className="button-alert"
+            onClick={onConfirm}
+            ref={deleteButtonRef}
+          >
+            Yes, delete
+          </button>
+          <button onClick={onClose}>Cancel</button>
+        </div>
       </div>
     </div>
   );
