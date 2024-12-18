@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Trash2 } from "react-feather";
 import Modal from "./Modal";
 
 const TaskList = () => {
@@ -30,12 +31,10 @@ const TaskList = () => {
 
   // State to manage the new todo text and description
   const [newTodoText, setNewTodoText] = useState("");
-  const [newTodoDescription, setNewTodoDescription] = useState("");
 
   // State to manage the editing todo and its new text and description
   const [editingTodoId, setEditingTodoId] = useState(null);
   const [editingTodoText, setEditingTodoText] = useState("");
-  const [editingTodoDescription, setEditingTodoDescription] = useState("");
 
   // State to manage the visibility of the new list input fields
   const [isAddingNewList, setIsAddingNewList] = useState(false);
@@ -82,10 +81,9 @@ const TaskList = () => {
 
   // Function to add a new todo to a specific list
   const addTodo = (listId) => {
-    if (newTodoText.trim() !== "" || newTodoDescription.trim() !== "") {
-      setLists(lists.map((list) => (list.id === listId ? { ...list, todos: [...list.todos, { id: Date.now(), text: newTodoText, description: newTodoDescription, status: "todo" }] } : list)));
+    if (newTodoText.trim() !== "") {
+      setLists(lists.map((list) => (list.id === listId ? { ...list, todos: [...list.todos, { id: Date.now(), text: newTodoText, status: "todo" }] } : list)));
       setNewTodoText(""); // Clear the input field after adding a todo
-      setNewTodoDescription(""); // Clear the description field after adding a todo
     }
   };
 
@@ -137,17 +135,15 @@ const TaskList = () => {
   };
 
   // Function to start editing a todo
-  const startEditingTodo = (todoId, currentText, currentDescription) => {
+  const startEditingTodo = (todoId, currentText) => {
     setEditingTodoId(todoId);
     setEditingTodoText(currentText);
-    setEditingTodoDescription(currentDescription);
   };
 
   // Function to cancel editing a todo
   const cancelEditingTodo = () => {
     setEditingTodoId(null);
     setEditingTodoText("");
-    setEditingTodoDescription("");
   };
 
   // Function to save the edited todo text and description
@@ -157,7 +153,7 @@ const TaskList = () => {
         list.id === listId
           ? {
               ...list,
-              todos: list.todos.map((todo) => (todo.id === todoId ? { ...todo, text: editingTodoText, description: editingTodoDescription } : todo)),
+              todos: list.todos.map((todo) => (todo.id === todoId ? { ...todo, text: editingTodoText } : todo)),
             }
           : list
       )
@@ -222,9 +218,11 @@ const TaskList = () => {
             className={`list-item ${openListId === list.id ? "open" : "closed"}`}
             style={{ display: openListId && openListId !== list.id ? "none" : "" }}
           >
-            <h2>{list.name}</h2>
-            <p>{list.description}</p>
-            {openListId === list.id ? <button onClick={() => toggleListVisibility(list.id)}>Close list</button> : <button onClick={() => toggleListVisibility(list.id)}>Open list</button>}
+            <div className="list-name-section">
+              <h2>{list.name}</h2>
+              <p>{list.description}</p>
+              {openListId === list.id ? <button onClick={() => toggleListVisibility(list.id)}>Close list</button> : <button onClick={() => toggleListVisibility(list.id)}>Open list</button>}
+            </div>
             {openListId === list.id && (
               <div>
                 {editingListId === list.id ? (
@@ -249,9 +247,21 @@ const TaskList = () => {
                     <button onClick={() => openDeleteModal(list.id)}>Remove list</button>
                   </div>
                 )}
-                <ul>
+                <h3>Add new tasks to this list</h3>
+                <input
+                  type="text"
+                  value={newTodoText}
+                  onChange={(e) => setNewTodoText(e.target.value)}
+                  placeholder="New todo"
+                />
+                <button onClick={() => addTodo(list.id)}>Add task</button>
+                <h3>Tasks in this list:</h3>
+                <ul className="task-list-content">
                   {list.todos.map((todo) => (
-                    <li key={todo.id}>
+                    <li
+                      key={todo.id}
+                      className="task"
+                    >
                       {editingTodoId === todo.id ? (
                         <div>
                           <input
@@ -259,42 +269,45 @@ const TaskList = () => {
                             value={editingTodoText}
                             onChange={(e) => setEditingTodoText(e.target.value)}
                           />
-                          <input
-                            type="text"
-                            value={editingTodoDescription}
-                            onChange={(e) => setEditingTodoDescription(e.target.value)}
-                          />
                           <button onClick={() => saveEditingTodo(list.id, todo.id)}>Save</button>
                           <button onClick={cancelEditingTodo}>Cancel</button>
                         </div>
                       ) : (
                         <div>
-                          <p>{todo.text}</p>
-                          <p>{todo.description}</p>
-                          <p>Status: {todo.status}</p>
-                          <button onClick={() => startEditingTodo(todo.id, todo.text, todo.description)}>Edit</button>
-                          <button onClick={() => removeTodo(list.id, todo.id)}>Remove</button>
-                          <button onClick={() => changeTodoStatus(list.id, todo.id, "todo")}>Todo</button>
-                          <button onClick={() => changeTodoStatus(list.id, todo.id, "doing")}>Doing</button>
-                          <button onClick={() => changeTodoStatus(list.id, todo.id, "done")}>Done</button>
+                          <div className="task-content">
+                            <p>{todo.text}</p>
+                            <span>{todo.description}</span>
+                            <p>Status: {todo.status}</p>
+                          </div>
+                          <div className="task-controls">
+                            <div style={{ display: "flex", columnGap: "4px", justifyContent: "center" }}>
+                              <button onClick={() => changeTodoStatus(list.id, todo.id, "todo")}>Todo</button>
+                              <button onClick={() => changeTodoStatus(list.id, todo.id, "doing")}>Doing</button>
+                              <button onClick={() => changeTodoStatus(list.id, todo.id, "done")}>Done</button>
+                            </div>
+                            <button
+                              className="button-secondary"
+                              onClick={() => startEditingTodo(todo.id, todo.text, todo.description)}
+                            >
+                              Edit task
+                            </button>
+                            <button
+                              className="button-alert"
+                              onClick={() => removeTodo(list.id, todo.id)}
+                            >
+                              Delete task
+                              <Trash2
+                                color="#ffffff"
+                                size="16"
+                                style={{ marginLeft: "4px" }}
+                              />
+                            </button>
+                          </div>
                         </div>
                       )}
                     </li>
                   ))}
                 </ul>
-                <input
-                  type="text"
-                  value={newTodoText}
-                  onChange={(e) => setNewTodoText(e.target.value)}
-                  placeholder="New todo"
-                />
-                <input
-                  type="text"
-                  value={newTodoDescription}
-                  onChange={(e) => setNewTodoDescription(e.target.value)}
-                  placeholder="New todo description"
-                />
-                <button onClick={() => addTodo(list.id)}>Save Todo</button>
               </div>
             )}
           </div>

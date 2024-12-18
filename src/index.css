@@ -15,10 +15,34 @@
   padding: 10px;
 }
 
-.btn {
+button {
+  cursor: pointer;
   padding: 0.5rem 1rem;
+  margin: 8px;
   border: none;
   border-radius: 5px;
+  height: 44px;
+  font-size: 16px;
+  background-color: #005c8a;
+}
+button:hover {
+  text-decoration: underline;
+}
+
+.button-secondary {
+  background-color: transparent;
+  color: white;
+  box-shadow: 0 0 0 1px white;
+  padding: 10px;
+}
+
+.button-alert {
+  background-color: #9c1500;
+  color: white;
+}
+
+input {
+  height: 44px;
 }
 
 ul {
@@ -69,11 +93,11 @@ li {
   }
   .list-item {
     box-shadow: 0 0 0 1px white;
+    border-radius: 5px;
     width: 200px;
     padding: 40px;
     max-width: 600px;
     margin: 5px;
-    border-radius: 5px;
     flex: auto;
   }
   .list-item.open {
@@ -81,11 +105,40 @@ li {
     box-shadow: none;
     margin: 20px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
   }
 
   .list-item.closed {
+  }
+  .list-name-section {
+    margin: 8px;
+  }
+  .task-list-content {
+    display: flex;
+    max-width: 1280px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: stretch;
+    align-items: stretch;
+  }
+  .task {
+    box-shadow: 0 0 0 1px white;
+    border-radius: 5px;
+    padding: 10px;
+    width: 300px;
+    margin: 5px;
+  }
+  .task-content {
+  }
+  .task-controls {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-content: center;
+    align-items: stretch;
   }
 }
 
@@ -104,10 +157,6 @@ li {
   }
   span {
     font-size: 0.875rem;
-  }
-
-  input {
-    width: 100%;
   }
 
   .task {
