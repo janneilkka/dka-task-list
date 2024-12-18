@@ -42,6 +42,12 @@ const TaskList = () => {
   // State to manage the current filter for todos
   const [todoFilter, setTodoFilter] = useState("all");
 
+  // Function to filter todos based on their status
+  const filterTodos = (todos) => {
+    if (todoFilter === "all") return todos;
+    return todos.filter((todo) => todo.status === todoFilter);
+  };
+
   // Save lists to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("lists", JSON.stringify(lists));
@@ -280,9 +286,23 @@ const TaskList = () => {
                   </div>
                   <button onClick={() => addTodo(list.id)}>Add task</button>
                 </div>
-                <h3>Tasks in this list:</h3>
+                <label htmlFor="filter-buttons">
+                  <h3>Filter the tasks in this list:</h3>
+                </label>
+                <select
+                  className="filter-buttons"
+                  name="filter-buttons"
+                  id="filter-buttons"
+                  value={todoFilter}
+                  onChange={(e) => setTodoFilter(e.target.value)}
+                >
+                  <option value="all">All</option>
+                  <option value="todo">Todo</option>
+                  <option value="doing">Doing</option>
+                  <option value="done">Done</option>
+                </select>
                 <ul className="task-list-content">
-                  {list.todos.map((todo) => (
+                  {filterTodos(list.todos).map((todo) => (
                     <li
                       key={todo.id}
                       className="task"
